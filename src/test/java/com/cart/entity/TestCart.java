@@ -27,6 +27,12 @@ public class TestCart {
 		shoppingCartItem = new ShoppingCartItem(productName, 1, Double.parseDouble(cost));
 		shoppingCartItems.put(productName, shoppingCartItem);
 	}
+	
+	@Given("^And a sales tax rate of \"(.*?)\"%$")
+	public void and_a_sales_tax_rate_of(String salesTax) throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		shoppingCart.setSalesTax(Double.parseDouble(salesTax));
+	}
 
 	@When("^The user adds (\\d+) Dove Soaps to the shopping cart$")
 	public void the_user_adds_Dove_Soaps_to_the_shopping_cart(int quantity) throws Throwable {
@@ -34,6 +40,13 @@ public class TestCart {
 		ShoppingCartItem temp = shoppingCartItems.get("Dove Soap");
 		temp.quantity = quantity;
 		shoppingCart.addItem(temp);
+	}
+	
+	@When("^then adds another (\\d+) \"(.*?)\"s to the shopping cart$")
+	public void then_adds_another_s_to_the_shopping_cart(int additionalQuantity, String productName) throws Throwable {
+		ShoppingCartItem temp = shoppingCartItems.get(productName);
+		ShoppingCartItem additionalItem = new ShoppingCartItem(productName, additionalQuantity, temp.cost);
+	    shoppingCart.addItem(additionalItem);
 	}
 
 	@Then("^The shopping cart should contain (\\d+) \"(.*?)\"s each with a unit price of \"(.*?)\",$")
@@ -51,5 +64,11 @@ public class TestCart {
 	public void the_shopping_cart_total_price_should_equal(String totalCost) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 		assertTrue(shoppingCart.getTotalCost() == Double.parseDouble(totalCost));
+	}
+	
+	@Then("^the total sales tax amount for the shopping cart should equal \"(.*?)\"$")
+	public void the_total_sales_tax_amount_for_the_shopping_cart_should_equal(String salesTaxAmount) throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertTrue(shoppingCart.getSalesTaxAmount() == Double.parseDouble(salesTaxAmount));
 	}
 }
